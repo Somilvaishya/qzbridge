@@ -13,18 +13,37 @@ window.QZBridge = {
 
         // Ensure QZ is ready
         window.QZBridgeConnect.init().then(() => {
-            // Fetch applicable templates
-            frappe.call({
-                method: 'qzbridge.api.get_templates_for_doctype',
-                args: { doctype: doctype },
-                callback: function(r) {
-                    if (r.message && r.message.length > 0) {
-                        let dialog = new window.QZPrintDialog(r.message, context);
-                        dialog.show();
-                    } else {
-                        frappe.msgprint(__('No active Label Templates found for this Document Type.'));
+            // If context has items, enrich them with batch details before continuing
+            let prepare_context = Promise.resolve();
+            if (context.items && context.items.length > 0) {
+                prepare_context = new Promise((res, rej) => {
+                    frappe.call({
+                        method: 'qzbridge.api.enrich_items_with_batches',
+                        args: { items_json: JSON.stringify(context.items) },
+                        callback: function(r) {
+                            if (r.message) {
+                                context.items = r.message;
+                            }
+                            res();
+                        }
+                    });
+                });
+            }
+
+            prepare_context.then(() => {
+                // Fetch applicable templates
+                frappe.call({
+                    method: 'qzbridge.api.get_templates_for_doctype',
+                    args: { doctype: doctype },
+                    callback: function(r) {
+                        if (r.message && r.message.length > 0) {
+                            let dialog = new window.QZPrintDialog(r.message, context);
+                            dialog.show();
+                        } else {
+                            frappe.msgprint(__('No active Label Templates found for this Document Type.'));
+                        }
                     }
-                }
+                });
             });
         });
     },

@@ -83,5 +83,9 @@ window.QZBridgeConnect = {
     
     getPrinters: function() {
         return this.init().then(() => qz.printers.find());
+    },
+    
+    getPrinterDetails: function(printer) {
+        return this.init().then(() => qz.printers.details(printer));
     }
 };
