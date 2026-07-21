@@ -24,9 +24,11 @@ app_license = "mit"
 # Includes in <head>
 # ------------------
 
-# include js, css files in header of desk.html
-# app_include_css = "/assets/qzbridge/css/qzbridge.css"
-# app_include_js = "/assets/qzbridge/js/qzbridge.js"
+app_include_js = [
+    "/assets/qzbridge/js/qz_connect.js",
+    "/assets/qzbridge/js/qzbridge.js",
+    "/assets/qzbridge/js/print_dialog.js"
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/qzbridge/css/qzbridge.css"
@@ -42,8 +44,11 @@ app_license = "mit"
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
-# include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Purchase Receipt": "public/js/consumer_button.js",
+    "Sales Invoice": "public/js/consumer_button.js",
+    "Stock Entry": "public/js/consumer_button.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

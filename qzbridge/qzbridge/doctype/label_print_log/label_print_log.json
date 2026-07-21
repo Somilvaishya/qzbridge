@@ -1,0 +1,113 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2026-07-20 12:49:57.525215",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "print_datetime",
+  "printed_by",
+  "status",
+  "cb1",
+  "printer",
+  "template",
+  "label_count",
+  "sb1",
+  "source_doctype",
+  "source_name",
+  "error_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "print_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Print Datetime"
+  },
+  {
+   "fieldname": "printed_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Printed By",
+   "options": "User"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Success\nFailed"
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "printer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Printer"
+  },
+  {
+   "fieldname": "template",
+   "fieldtype": "Link",
+   "label": "Template",
+   "options": "Label Template"
+  },
+  {
+   "fieldname": "label_count",
+   "fieldtype": "Int",
+   "label": "Label Count"
+  },
+  {
+   "fieldname": "sb1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "source_doctype",
+   "fieldtype": "Link",
+   "label": "Source DocType",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "source_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Source Document",
+   "options": "source_doctype"
+  },
+  {
+   "fieldname": "error_log",
+   "fieldtype": "Small Text",
+   "label": "Error Log"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-20 12:49:57.525215",
+ "modified_by": "Administrator",
+ "module": "QZBridge",
+ "name": "Label Print Log",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

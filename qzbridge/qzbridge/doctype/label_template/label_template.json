@@ -1,0 +1,158 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:template_name",
+ "creation": "2026-07-20 12:49:57.302163",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "is_active",
+  "applies_to",
+  "printer_language",
+  "cb1",
+  "width_mm",
+  "height_mm",
+  "gap_mm",
+  "cb2",
+  "density",
+  "speed",
+  "sb1",
+  "raw_code",
+  "cb3",
+  "preview_html",
+  "sb2",
+  "variables"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "applies_to",
+   "fieldtype": "Link",
+   "label": "Applies To (Hint)",
+   "options": "DocType"
+  },
+  {
+   "default": "TSPL",
+   "fieldname": "printer_language",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Printer Language",
+   "options": "TSPL\nZPL\nEPL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "100",
+   "fieldname": "width_mm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Width (mm)",
+   "reqd": 1
+  },
+  {
+   "default": "50",
+   "fieldname": "height_mm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Height (mm)",
+   "reqd": 1
+  },
+  {
+   "default": "2",
+   "fieldname": "gap_mm",
+   "fieldtype": "Float",
+   "label": "Gap (mm)"
+  },
+  {
+   "fieldname": "cb2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "8",
+   "description": "TSPL Density (0-15)",
+   "fieldname": "density",
+   "fieldtype": "Int",
+   "label": "Density"
+  },
+  {
+   "default": "4",
+   "description": "TSPL Speed (inches/sec)",
+   "fieldname": "speed",
+   "fieldtype": "Int",
+   "label": "Speed"
+  },
+  {
+   "fieldname": "sb1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "raw_code",
+   "fieldtype": "Code",
+   "label": "Raw Printing Code (Jinja)"
+  },
+  {
+   "fieldname": "cb3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "preview_html",
+   "fieldtype": "HTML",
+   "label": "Live Preview"
+  },
+  {
+   "fieldname": "sb2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "variables",
+   "fieldtype": "Small Text",
+   "label": "Declared Variables (Comma separated)"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-20 12:49:57.302163",
+ "modified_by": "Administrator",
+ "module": "QZBridge",
+ "name": "Label Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
