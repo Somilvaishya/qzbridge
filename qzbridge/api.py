@@ -30,8 +30,7 @@ def get_templates_for_doctype(doctype):
     """
     templates = frappe.get_all(
         "Label Template",
-        filters={"is_active": 1},
-        or_filters={"applies_to": doctype, "applies_to": ["in", ["", None]]},
+        filters={"is_active": 1, "applies_to": ["in", [doctype, "", None]]},
         fields=["name", "template_name", "printer_language"]
     )
     return templates

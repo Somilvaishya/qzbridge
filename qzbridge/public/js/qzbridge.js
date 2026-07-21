@@ -8,6 +8,7 @@ window.QZBridge = {
     print_dialog: function(doctype, docname, doc_data) {
         // Prepare context
         let context = Object.assign({}, doc_data);
+        context.doc = doc_data; // Expose as 'doc' for standard Frappe Jinja syntax
         context._source_doctype = doctype;
         context._source_name = docname;
 
