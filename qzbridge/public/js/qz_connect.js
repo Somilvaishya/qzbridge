@@ -61,6 +61,7 @@ window.QZBridgeConnect = {
                 });
             });
 
+            qz.security.setSignatureAlgorithm("SHA512");
             qz.security.setSignaturePromise(function(toSign) {
                 return function(resolveSig, rejectSig) {
                     frappe.call({

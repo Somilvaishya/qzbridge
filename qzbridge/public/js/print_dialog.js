@@ -49,6 +49,11 @@ window.QZPrintDialog = class QZPrintDialog {
         
         let fields = [
             {
+                fieldname: 'status_html',
+                fieldtype: 'HTML',
+                label: ''
+            },
+            {
                 fieldname: 'printer',
                 fieldtype: 'Select',
                 label: __('Select Printer'),
@@ -139,9 +144,14 @@ window.QZPrintDialog = class QZPrintDialog {
                     me.context.items = selected_items;
                 }
                 
+                me._update_status_dot('amber', 'Sending to printer...');
                 window.QZBridge.execute_print(values.printer, values.template, me.context)
                     .then(() => {
+                        me._update_status_dot('green', 'Connected to QZ Tray');
                         me.dialog.hide();
+                    })
+                    .catch(() => {
+                        me._update_status_dot('red', 'Print Failed');
                     })
                     .finally(() => {
                         btn.prop('disabled', false);
@@ -159,6 +169,43 @@ window.QZPrintDialog = class QZPrintDialog {
         }
         
         this.dialog.show();
+        this._update_status_dot();
+        
+        // Listen for disconnects
+        if (window.qz && qz.websocket) {
+            qz.websocket.setClosedCallbacks(() => {
+                if (me.dialog) me._update_status_dot('red', 'Disconnected from QZ Tray');
+            });
+            qz.websocket.setErrorCallbacks(() => {
+                if (me.dialog) me._update_status_dot('red', 'Connection Error');
+            });
+        }
+    }
+
+    _update_status_dot(state, msg) {
+        if (!this.dialog) return;
+        
+        let color = '#ff3b30'; // red
+        let text = 'Disconnected';
+        
+        if (state) {
+            color = state === 'amber' ? '#ff9500' : (state === 'green' ? '#34c759' : color);
+            text = msg;
+        } else if (window.qz && qz.websocket && qz.websocket.isActive()) {
+            color = '#34c759'; // green
+            text = 'Connected to QZ Tray';
+        } else if (window.QZBridgeConnect && window.QZBridgeConnect.connecting) {
+            color = '#ff9500'; // amber
+            text = 'Connecting...';
+        }
+        
+        let html = `
+            <div style="display: flex; align-items: center; justify-content: flex-end; margin-top: -15px; margin-bottom: 5px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; margin-right: 6px; box-shadow: 0 0 4px ${color};"></div>
+                <span style="font-size: 11px; color: #666; font-weight: 500;">${text}</span>
+            </div>
+        `;
+        this.dialog.get_field('status_html').$wrapper.html(html);
     }
 
     _render_item_grid() {
