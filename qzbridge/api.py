@@ -9,6 +9,23 @@ def get_print_data(template_name, context_json):
     Called by JS qzbridge.print() to get the raw commands for QZ Tray.
     """
     context = json.loads(context_json) if isinstance(context_json, str) else context_json
+    if not isinstance(context, dict):
+        context = {}
+
+    source_doctype = context.get("_source_doctype")
+    source_name = context.get("_source_name")
+
+    if source_doctype and source_name and frappe.db.exists(source_doctype, source_name):
+        doc_obj = frappe.get_doc(source_doctype, source_name).as_dict()
+        existing_doc = context.get("doc") or {}
+        if isinstance(existing_doc, dict):
+            doc_obj.update(existing_doc)
+        context["doc"] = doc_obj
+
+        for k, v in doc_obj.items():
+            if k not in context:
+                context[k] = v
+
     commands = render(template_name, context)
     return {
         "commands": commands
