@@ -25,9 +25,9 @@ app_license = "mit"
 # ------------------
 
 app_include_js = [
-    "/assets/qzbridge/js/qz_connect.js",
-    "/assets/qzbridge/js/qzbridge.js",
-    "/assets/qzbridge/js/print_dialog.js"
+    "/assets/qzbridge/js/qz_connect.js?v=20260727_2",
+    "/assets/qzbridge/js/qzbridge.js?v=20260727_2",
+    "/assets/qzbridge/js/print_dialog.js?v=20260727_2"
 ]
 
 # include js, css files in header of web template

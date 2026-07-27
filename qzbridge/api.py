@@ -53,12 +53,19 @@ def get_templates_for_doctype(doctype):
     return templates
 
 @frappe.whitelist()
-def generate_carton_data(items_json, qty_per_carton):
+def generate_carton_data(items_json, qty_per_carton=None, global_uom=None):
     """
-    Expands a list of items into individual cartons based on qty_per_carton.
+    Expands a list of items into individual cartons based on qty_per_carton or global_uom.
     """
     items = json.loads(items_json) if isinstance(items_json, str) else items_json
-    return expand_by_carton(items, qty_per_carton)
+    return expand_by_carton(items, default_qty_per_carton=qty_per_carton, global_uom=global_uom)
+
+@frappe.whitelist()
+def get_common_uoms():
+    """
+    Returns list of UOMs available in the system for dropdown selection.
+    """
+    return frappe.get_all("UOM", fields=["name"], order_by="name asc", limit_page_length=0)
 
 @frappe.whitelist()
 def enrich_items_with_batches(items_json):

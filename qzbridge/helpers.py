@@ -34,22 +34,59 @@ def log_print(template, context, printer, status="Success", error_log=""):
         frappe.log_error(f"Failed to log print: {str(e)}", "QZBridge Log Error")
         return None
 
-def expand_by_carton(items, qty_per_carton):
+def get_uom_conversion_factor(item_code, target_uom):
+    """
+    Fetches the conversion factor for a given item_code and target_uom from ERPNext UOM Conversion Detail table or Item doctype.
+    Returns flt(conversion_factor) if found, else 1.0.
+    """
+    if not item_code or not target_uom:
+        return 1.0
+        
+    stock_uom = frappe.db.get_value("Item", item_code, "stock_uom")
+    if stock_uom and stock_uom.strip().lower() == target_uom.strip().lower():
+        return 1.0
+
+    # Search in UOM Conversion Detail child table
+    cf = frappe.db.get_value("UOM Conversion Detail", {"parent": item_code, "uom": target_uom}, "conversion_factor")
+    if cf:
+        return flt(cf)
+        
+    return 1.0
+
+def expand_by_carton(items, default_qty_per_carton=None, global_uom=None):
     """
     Takes a list of items and breaks them down into individual carton objects.
-    e.g. if Qty is 50 and Qty/Carton is 20, returns 3 objects with quantities 20, 20, and 10.
+    Supports per-item custom qty_per_carton, global_uom conversion factor, or item level uom conversion.
     """
     expanded_items = []
     
     for item in items:
-        total_qty = flt(item.get("qty") or item.get("received_qty") or item.get("stock_qty"))
-        per_carton = flt(qty_per_carton)
+        total_qty = flt(item.get("qty") or item.get("received_qty") or item.get("stock_qty") or item.get("stock_qty_val"))
+        item_code = item.get("item_code")
         
+        # Determine qty_per_carton for this specific item
+        per_carton = flt(item.get("qty_per_carton") or item.get("carton_qty_setting"))
+        
+        target_uom = item.get("carton_uom") or item.get("uom") or global_uom
+        
+        if per_carton <= 0 and target_uom and item_code:
+            cf = get_uom_conversion_factor(item_code, target_uom)
+            if cf > 0:
+                per_carton = cf
+                
+        if per_carton <= 0 and default_qty_per_carton:
+            per_carton = flt(default_qty_per_carton)
+            
+        if per_carton <= 0:
+            frappe.throw(frappe._("Qty per Carton is required and must be greater than 0 for item {0}").format(item_code or item.get('item_name', '')))
+            
         if total_qty <= 0 or per_carton <= 0:
-            item['carton_no'] = 1
-            item['total_cartons'] = 1
-            item['carton_qty'] = total_qty
-            expanded_items.append(item)
+            new_item = item.copy()
+            new_item['carton_no'] = 1
+            new_item['total_cartons'] = 1
+            new_item['carton_qty'] = total_qty
+            new_item['carton_uom'] = target_uom or item.get('stock_uom', '')
+            expanded_items.append(new_item)
             continue
             
         full_cartons = int(total_qty // per_carton)
@@ -62,6 +99,7 @@ def expand_by_carton(items, qty_per_carton):
             new_item['carton_no'] = current_carton
             new_item['total_cartons'] = total_cartons
             new_item['carton_qty'] = per_carton
+            new_item['carton_uom'] = target_uom or item.get('stock_uom', '')
             new_item['qty'] = per_carton # Override for display
             expanded_items.append(new_item)
             current_carton += 1
@@ -71,6 +109,7 @@ def expand_by_carton(items, qty_per_carton):
             new_item['carton_no'] = current_carton
             new_item['total_cartons'] = total_cartons
             new_item['carton_qty'] = remainder
+            new_item['carton_uom'] = target_uom or item.get('stock_uom', '')
             new_item['qty'] = remainder
             expanded_items.append(new_item)
             

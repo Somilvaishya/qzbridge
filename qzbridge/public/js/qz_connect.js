@@ -82,8 +82,25 @@ window.QZBridgeConnect = {
         return qz.websocket.connect({ retries: 2, delay: 1 });
     },
     
+    getActivePrinters: function() {
+        return this.init().then(() => {
+            return qz.printers.find().then(printers => {
+                if (!Array.isArray(printers) || printers.length === 0) return [];
+                
+                let isVirtual = (name) => {
+                    let n = (name || '').toLowerCase();
+                    return n.includes('pdf') || n.includes('onenote') || n.includes('anydesk') || 
+                           n.includes('fax') || n.includes('redirected') || n.includes('xps');
+                };
+
+                let activePrinters = printers.filter(p => !isVirtual(p));
+                return activePrinters.length > 0 ? activePrinters : printers;
+            }).catch(() => []);
+        });
+    },
+
     getPrinters: function() {
-        return this.init().then(() => qz.printers.find());
+        return this.getActivePrinters();
     },
     
     getPrinterDetails: function(printer) {
