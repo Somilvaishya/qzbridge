@@ -555,7 +555,7 @@ window.QZPrintDialog = class QZPrintDialog {
         if (dpi >= 550) dpmm = "24dpmm";
         else if (dpi >= 280) dpmm = "12dpmm";
         
-        let url = `http://api.labelary.com/v1/printers/${dpmm}/labels/${width_inch}x${height_inch}/0/`;
+        let url = `https://api.labelary.com/v1/printers/${dpmm}/labels/${width_inch}x${height_inch}/0/`;
         
         container.innerHTML = '<div class="text-muted text-center" style="padding: 15px;">Fetching live preview from Labelary...</div>';
         

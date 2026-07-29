@@ -47,7 +47,7 @@ frappe.ui.form.on("Label Template", {
 
         let width_inch = (frm.doc.width_mm / 25.4).toFixed(2);
         let height_inch = (frm.doc.height_mm / 25.4).toFixed(2);
-        let url = `http://api.labelary.com/v1/printers/8dpmm/labels/${width_inch}x${height_inch}/0/`;
+        let url = `https://api.labelary.com/v1/printers/8dpmm/labels/${width_inch}x${height_inch}/0/`;
 
         fetch(url, {
             method: 'POST',
