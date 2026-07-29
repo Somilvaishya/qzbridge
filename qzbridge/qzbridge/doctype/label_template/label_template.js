@@ -47,7 +47,19 @@ frappe.ui.form.on("Label Template", {
 
         let width_inch = (frm.doc.width_mm / 25.4).toFixed(2);
         let height_inch = (frm.doc.height_mm / 25.4).toFixed(2);
-        let url = `https://api.labelary.com/v1/printers/8dpmm/labels/${width_inch}x${height_inch}/0/`;
+
+        let dpi = 203;
+        let pw_match = safe_zpl.match(/\^PW(\d+)/);
+        if (pw_match && pw_match[1] && width_inch > 0) {
+            let pw_dots = parseInt(pw_match[1]);
+            dpi = Math.round(pw_dots / parseFloat(width_inch));
+        }
+        
+        let dpmm = "8dpmm";
+        if (dpi >= 550) dpmm = "24dpmm";
+        else if (dpi >= 280) dpmm = "12dpmm";
+
+        let url = `https://api.labelary.com/v1/printers/${dpmm}/labels/${width_inch}x${height_inch}/0/`;
 
         fetch(url, {
             method: 'POST',
