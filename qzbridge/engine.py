@@ -65,9 +65,10 @@ def render(template_name, context):
         # Append the user's rendered body
         commands.extend(rendered_body.split('\n'))
         
-        # Add the print command
-        copies = context.get('no_of_copies', 1)
-        commands.append(f"PRINT 1,{copies}")
+        # Add the print command if the user hasn't already included one
+        if "PRINT " not in rendered_body:
+            copies = context.get('no_of_copies', 1)
+            commands.append(f"PRINT 1,{copies}")
         
     else:
         # For ZPL and EPL, the user typically writes the full envelope (^XA...^XZ or N...P1)
