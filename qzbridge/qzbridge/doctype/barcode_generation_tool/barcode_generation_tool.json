@@ -66,13 +66,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "existing_batch.manufacturing_date",
    "fieldname": "manufacturing_date",
    "fieldtype": "Date",
    "label": "Manufacturing Date"
   },
   {
-   "fetch_from": "existing_batch.expiry_date",
    "fieldname": "expiry_date",
    "fieldtype": "Date",
    "label": "Expiry Date"

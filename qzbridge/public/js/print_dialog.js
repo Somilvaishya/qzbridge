@@ -24,7 +24,9 @@ window.QZPrintDialog = class QZPrintDialog {
 
     _fetch_printer_details(printer_name) {
         let me = this;
+        console.log("FETCHING PRINTER DETAILS FOR:", printer_name);
         window.QZBridgeConnect.getPrinterDetails(printer_name).then(details => {
+            console.log("RAW PRINTER DETAILS FROM QZ:", details);
             let d = Array.isArray(details) ? details[0] : details;
             if (d) {
                 me.context.printer = {

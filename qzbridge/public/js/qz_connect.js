@@ -104,6 +104,9 @@ window.QZBridgeConnect = {
     },
     
     getPrinterDetails: function(printer) {
-        return this.init().then(() => qz.printers.details(printer));
+        return this.init().then(() => qz.printers.details(printer)).then(details => {
+            console.log("Printer Details for " + printer + ":", details);
+            return details;
+        });
     }
 };

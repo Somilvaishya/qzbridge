@@ -80,6 +80,15 @@ def enrich_items_with_batches(items_json):
     enriched_items = []
     
     for item in items:
+        # Enrich basic item details if they are missing/defaulted
+        if item.get("item_code") and (not item.get("item_name") or item.get("item_name") == item.get("item_code") or str(item.get("uom")).lower() in ["pcs", "nos", "", "none"]):
+            item_data = frappe.db.get_value("Item", item.get("item_code"), ["item_name", "stock_uom"], as_dict=1)
+            if item_data:
+                item["item_name"] = item_data.get("item_name") or item.get("item_name")
+                # only override uom if it was default 'Pcs' or empty
+                if str(item.get("uom")).lower() in ["pcs", "nos", "", "none"] and item_data.get("stock_uom"):
+                    item["uom"] = item_data.get("stock_uom")
+
         batch_no = item.get("batch_no")
         bundle_id = item.get("serial_and_batch_bundle")
         

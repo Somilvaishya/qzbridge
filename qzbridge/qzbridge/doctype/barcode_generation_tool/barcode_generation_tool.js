@@ -14,15 +14,36 @@ frappe.ui.form.on("Barcode Generation Tool", {
             frm.add_custom_button(__('Print Barcodes'), () => {
                 let context = Object.assign({}, frm.doc);
                 // Standardize the batch_no for printing
-                if (frm.doc.mode === 'Existing Batch') {
-                    context.batch_no = frm.doc.existing_batch;
-                }
+                let batch = frm.doc.mode === 'Existing Batch' ? frm.doc.existing_batch : frm.doc.batch_no;
+                context.batch_no = batch;
                 
-                if (window.QZBridge) {
-                    window.QZBridge.print_dialog(frm.doctype, frm.docname, context);
-                } else {
-                    frappe.msgprint(__('QZBridge is not loaded.'));
-                }
+                // Fetch Item Name and UOM to make the print data robust
+                frappe.db.get_value('Item', frm.doc.item_code, ['item_name', 'stock_uom'], (r) => {
+                    let values = (r && r.message) ? r.message : (r || {});
+                    let item_name = values.item_name || frm.doc.item_code;
+                    let uom = values.stock_uom || 'Pcs';
+                    
+                    // Create an items array to simulate a transactional document
+                    context.items = [{
+                        item_code: frm.doc.item_code,
+                        item_name: item_name,
+                        batch_no: batch,
+                        manufacturing_date: frm.doc.manufacturing_date,
+                        expiry_date: frm.doc.expiry_date,
+                        mfg_date: frm.doc.manufacturing_date, // Template fallback
+                        exp_date: frm.doc.expiry_date, // Template fallback
+                        qty: frm.doc.label_qty || 1,
+                        uom: uom,
+                        stock_uom: uom,
+                        print_qty: 1
+                    }];
+                    
+                    if (window.QZBridge) {
+                        window.QZBridge.print_dialog(frm.doctype, frm.docname, context);
+                    } else {
+                        frappe.msgprint(__('QZBridge is not loaded.'));
+                    }
+                });
             }).addClass('btn-primary');
         }
     },
